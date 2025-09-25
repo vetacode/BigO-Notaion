@@ -8,7 +8,7 @@
         display: flex;
         align-items: flex-end;
         gap: 20px;
-        height: 800px;
+        height: 700px;
       }
       .bar {
         width: 80px;
@@ -29,6 +29,7 @@
     </style>
   </head>
   <body>
+    <h2>Common Selection Sort Visualization</h2>
     <div id="bars"></div>
     <script>
       const arr = [64, 25, 42, 55, 12, 22, 11, 20, 70, 5, 7, 3, 2];
@@ -54,12 +55,12 @@
           let minIndex = i;
           for (let j = i + 1; j < n; j++) {
             render(i, j, i - 1);
-            await new Promise((r) => setTimeout(r, 500));
+            await new Promise((r) => setTimeout(r, 400));
             if (arr[j] < arr[minIndex]) minIndex = j;
           }
           [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
           render(-1, -1, i);
-          await new Promise((r) => setTimeout(r, 1000));
+          await new Promise((r) => setTimeout(r, 400));
         }
         render(-1, -1, n - 1);
       }
