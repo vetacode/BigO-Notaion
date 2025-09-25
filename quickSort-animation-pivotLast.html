@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>QuickSort Visualizer</title>
+    <style>
+      #bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+        height: 700px;
+      }
+      .bar {
+        width: 80px;
+        background: gray;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+      }
+      .pivot {
+        background: red;
+      }
+      .active {
+        background: blue;
+      }
+      .swap {
+        background: orange;
+      }
+      .sorted {
+        background: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>QuickSort Visualization (Pivot = Last Element)</h2>
+    <div id="bars"></div>
+    <script>
+      const arr = [64, 25, 42, 55, 12, 22, 11, 20, 70, 5, 7, 3, 2];
+      const bars = document.getElementById('bars');
+
+      function render(pivot = -1, active = -1, swaps = [], sorted = []) {
+        bars.innerHTML = '';
+        arr.forEach((val, i) => {
+          const bar = document.createElement('div');
+          bar.className = 'bar';
+          bar.style.height = val * 10 + 'px';
+          bar.textContent = val;
+
+          if (sorted.includes(i)) bar.classList.add('sorted');
+          else if (i === pivot) bar.classList.add('pivot');
+          else if (i === active) bar.classList.add('active');
+          else if (swaps.includes(i)) bar.classList.add('swap');
+
+          bars.appendChild(bar);
+        });
+      }
+
+      function sleep(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
+
+      async function partition(low, high) {
+        let pivot = arr[high];
+        let i = low - 1;
+
+        render(high, -1, [], []); // Show pivot
+        await sleep(400);
+
+        for (let j = low; j <= high - 1; j++) {
+          render(high, j, [], []);
+          await sleep(400);
+
+          if (arr[j] <= pivot) {
+            i++;
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+            render(high, j, [i, j], []);
+            await sleep(400);
+          }
+        }
+        [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+        render(i + 1, -1, [i + 1, high], []);
+        await sleep(400);
+
+        return i + 1;
+      }
+
+      async function quickSort(low, high, sorted = []) {
+        if (low < high) {
+          let pi = await partition(low, high);
+          sorted.push(pi);
+          await quickSort(low, pi - 1, sorted);
+          await quickSort(pi + 1, high, sorted);
+        } else {
+          if (low === high) sorted.push(low);
+        }
+        render(-1, -1, [], sorted);
+      }
+
+      render();
+      quickSort(0, arr.length - 1);
+    </script>
+  </body>
+</html>
