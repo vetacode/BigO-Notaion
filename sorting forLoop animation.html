@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Selection Sort Visualizer</title>
+    <style>
+      #bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+        height: 800px;
+      }
+      .bar {
+        width: 80px;
+        background: gray;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+      }
+      .active {
+        background: blue;
+      }
+      .min {
+        background: red;
+      }
+      .sorted {
+        background: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bars"></div>
+    <script>
+      const arr = [64, 25, 42, 55, 12, 22, 11, 20, 70, 5, 7, 3, 2];
+      const bars = document.getElementById('bars');
+
+      function render(active = -1, minIndex = -1, sorted = -1) {
+        bars.innerHTML = '';
+        arr.forEach((val, i) => {
+          const bar = document.createElement('div');
+          bar.className = 'bar';
+          bar.style.height = val * 10 + 'px';
+          bar.textContent = val;
+          if (i <= sorted) bar.classList.add('sorted');
+          else if (i === active) bar.classList.add('active');
+          else if (i === minIndex) bar.classList.add('min');
+          bars.appendChild(bar);
+        });
+      }
+
+      async function selectionSort() {
+        const n = arr.length;
+        for (let i = 0; i < n - 1; i++) {
+          let minIndex = i;
+          for (let j = i + 1; j < n; j++) {
+            render(i, j, i - 1);
+            await new Promise((r) => setTimeout(r, 500));
+            if (arr[j] < arr[minIndex]) minIndex = j;
+          }
+          [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+          render(-1, -1, i);
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+        render(-1, -1, n - 1);
+      }
+
+      render();
+      selectionSort();
+    </script>
+  </body>
+</html>
